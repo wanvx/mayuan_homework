@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>马原方法工具箱</title>
+  <meta name="description" content="10 个问题，测测你的马原思维倾向：用马克思主义基本原理分析你的选择倾向，并给出一份 7 天行动实验。">
+  <meta name="theme-color" content="#C0392B">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <button class="logo" id="btn-logo" type="button">
+        <span class="logo-dot"></span>马原方法工具箱
+      </button>
+      <nav class="header-nav">
+        <button class="nav-btn" id="btn-nav-home" type="button">首页</button>
+        <button class="nav-btn" id="btn-about" type="button">关于</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ============ 首页 ============ -->
+    <section id="view-home" class="view">
+      <div class="hero">
+        <p class="hero-kicker">马克思主义基本原理 · 方法论</p>
+        <h1>马原方法工具箱</h1>
+        <p class="hero-sub">10 个问题，测测你的马原思维倾向</p>
+        <button class="btn btn-primary btn-lg" id="btn-start" type="button">开始答题</button>
+        <p class="disclaimer">这不是心理测试，不是标准答案，而是用马克思主义基本原理分析你的选择倾向。</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <p>回答 10 个学习生活中的选择题</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <p>得到六维标准分与组合类型</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <p>领取一份 7 天行动实验</p>
+        </div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">认识论</span>
+        <span class="chip">矛盾分析</span>
+        <span class="chip">发展变化</span>
+        <span class="chip">普遍联系</span>
+        <span class="chip">人民立场</span>
+        <span class="chip">实践观</span>
+      </div>
+    </section>
+
+    <!-- ============ 答题页 ============ -->
+    <section id="view-quiz" class="view">
+      <div class="quiz-head">
+        <span id="progress-text">第 1 / 10 题</span>
+        <span class="quiz-hint">凭第一反应选择，没有对错</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <div class="question-card">
+        <h2 class="question-text" id="question-text"></h2>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="quiz-foot">
+        <button class="btn btn-ghost" id="btn-prev" type="button">← 上一题</button>
+        <span class="quiz-hint">点击选项自动进入下一题</span>
+      </div>
+    </section>
+
+    <!-- ============ 结果页 ============ -->
+    <section id="view-result" class="view">
+      <div class="result-head">
+        <h2>你的马原思维画像</h2>
+        <p>六个维度的标准分（0—100），不是对错，而是你当前的分析习惯</p>
+      </div>
+
+      <div class="card">
+        <div class="chart-scroll">
+          <div class="chart" id="chart" role="img" aria-label="六维标准分柱状图"></div>
+        </div>
+        <div class="legend">
+          <span><i class="dot tier-low"></i>0—39 薄弱</span>
+          <span><i class="dot tier-mid"></i>40—59 待提升</span>
+          <span><i class="dot tier-good"></i>60—79 良好</span>
+          <span><i class="dot tier-high"></i>80—100 突出</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="stat-row">
+          <div class="stat">
+            <span class="stat-label">最高维</span>
+            <strong class="stat-value" id="stat-top"></strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">最低维</span>
+            <strong class="stat-value" id="stat-bottom"></strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">组合类型</span>
+            <strong class="stat-value" id="stat-combo"></strong>
+          </div>
+        </div>
+
+        <h3 class="card-title">马原诊断</h3>
+        <p class="summary-line" id="summary-line"></p>
+        <p class="diagnosis-text" id="diagnosis"></p>
+        <p class="proverb">马克思主义基本原理提示：实践是检验认识真理性的唯一标准。分析得再好，也要拿到实践中去验证。</p>
+
+        <h3 class="card-title">7 天行动实验</h3>
+        <p class="action-lead" id="action-lead"></p>
+        <p class="action-text" id="action"></p>
+
+        <p class="final-note">这不是标准答案，最终答案要在实践中检验和调整。</p>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" id="btn-retest" type="button">重新测试</button>
+          <button class="btn btn-outline" id="btn-home" type="button">返回首页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 关于页 ============ -->
+    <section id="view-about" class="view">
+      <div class="result-head">
+        <h2>关于这个工具箱</h2>
+        <p>课堂展示项目 · 用马克思主义基本原理分析日常选择</p>
+      </div>
+
+      <div class="card about-card">
+        <h3 class="card-title">项目简介</h3>
+        <p>“马原方法工具箱”是一个静态互动小网站：用 10 个大学生活中的真实情境，测量你在六个马原方法论维度上的思维倾向，给出“最高维 + 最低维”的组合分析。它不是心理测试，也不提供标准答案，而是提供一面自我反思的镜子和一份 7 天行动实验。</p>
+      </div>
+
+      <div class="card about-card">
+        <h3 class="card-title">六个维度对应的马原原理</h3>
+        <ul class="about-list">
+          <li>认识（认识论）：感性认识与理性认识、实践是检验真理的唯一标准</li>
+          <li>辩证（矛盾分析）：矛盾普遍性与特殊性、主次矛盾、两点论与重点论</li>
+          <li>发展（发展变化）：量变与质变、否定之否定、过程性思维</li>
+          <li>系统（普遍联系）：联系的普遍性、整体与部分、系统观念</li>
+          <li>价值（人民立场）：群众史观、为人民服务、个人价值与社会价值统一</li>
+          <li>实践（实践观）：实践是检验认识真理性的唯一标准</li>
+        </ul>
+      </div>
+
+      <div class="card about-card">
+        <h3 class="card-title">小组信息</h3>
+        <p>组员与分工：待填写（建议填写：姓名 / 策划与文案、前端开发、测试、展示）。</p>
+      </div>
+
+      <div class="card about-card">
+        <h3 class="card-title">反馈问卷</h3>
+        <p>欢迎扫码填写反馈，帮助我们把工具做得更好：</p>
+        <div class="qr-slot">在此放置反馈问卷二维码</div>
+      </div>
+
+      <div class="card about-card">
+        <h3 class="card-title">引用来源</h3>
+        <p>《马克思主义基本原理（2023年版）》P81：实践是检验认识真理性的唯一标准。</p>
+        <p>其他原理：矛盾普遍性与特殊性、量变质变规律、否定之否定规律、联系的普遍性、群众史观等。</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>小组分工</h4>
+          <p>策划与文案：待填写</p>
+          <p>前端开发：待填写</p>
+          <p>测试与展示：待填写</p>
+        </div>
+        <div>
+          <h4>引用来源</h4>
+          <p>《马克思主义基本原理（2023年版）》P81：实践是检验认识真理性的唯一标准。</p>
+          <p>其他原理：矛盾普遍性与特殊性、量变质变、否定之否定、联系的普遍性、群众史观等。</p>
+        </div>
+      </div>
+      <p class="copyright">© 2026 马原方法工具箱 · 课堂展示作品 · 测试结果仅用于自我反思，不构成任何评价。</p>
+    </div>
+  </footer>
+
+  <noscript>
+    <p style="text-align:center;padding:20px;">本页面需要开启 JavaScript 才能答题，请在浏览器设置中允许 JavaScript。</p>
+  </noscript>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
