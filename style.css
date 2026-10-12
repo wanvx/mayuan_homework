@@ -605,7 +605,7 @@ body {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  grid-template-columns: 1fr;
   gap: 28px;
   margin-bottom: 20px;
 }
