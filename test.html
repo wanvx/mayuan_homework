@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>马原人格测试网</title>
+  <meta name="description" content="20 道情境题，测出你在现实性、实践性、社会性、历史性、批判性、解放性六个维度上的马原人格画像。">
+  <meta name="theme-color" content="#C0392B">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/css/test.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-star" aria-hidden="true">★</span>马原人格测试网
+      </div>
+      <a class="back-btn" href="index.html">← 返回主页</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ============ 测试首页 ============ -->
+    <section id="view-home" class="view active">
+      <div class="hero">
+        <p class="hero-kicker">马克思主义基本原理 · 六维人格画像</p>
+        <h1>马原人格测试网</h1>
+        <p class="hero-sub">20 道情境题，测出你的马原人格倾向</p>
+        <button class="btn btn-primary btn-lg" id="btn-start" type="button">开始测试</button>
+        <p class="disclaimer">用马克思主义基本原理分析你的选择倾向</p>
+      </div>
+
+      <h2 class="section-title">六个维度</h2>
+      <div class="dim-grid" id="dim-grid"></div>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <p>回答 20 道学习生活中的选择题</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <p>得到六维标准分与人格画像</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <p>查看匹配度与发展建议</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 答题页 ============ -->
+    <section id="view-quiz" class="view">
+      <div class="quiz-head">
+        <span id="progress-text">第 1 / 20 题</span>
+        <span class="quiz-hint">凭第一反应选择，没有对错之分</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <div class="question-card">
+        <h2 class="question-text" id="question-text"></h2>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="quiz-foot">
+        <button class="btn btn-ghost" id="btn-prev" type="button">← 上一题</button>
+        <span class="quiz-hint">点击选项自动进入下一题</span>
+      </div>
+    </section>
+
+    <!-- ============ 结果页 ============ -->
+    <section id="view-result" class="view">
+      <div class="result-head">
+        <p class="result-kicker">你的马原人格</p>
+        <h2 id="result-name">——</h2>
+        <p class="result-match" id="result-match">匹配度 0.0%</p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">六维雷达</h3>
+        <div class="radar-wrap">
+          <div class="radar" id="radar" role="img" aria-label="六维标准分雷达图"></div>
+          <ul class="radar-legend" id="radar-legend"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">人格解读</h3>
+        <div class="tag-row" id="result-tags"></div>
+        <p class="label-line"><span>马原关键词</span><span id="result-keywords" class="value"></span></p>
+        <p class="label-line"><span>发展建议</span><span id="result-advice" class="value advice"></span></p>
+        <p class="fallback-note" id="result-fallback-note" hidden></p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">历史人物匹配</h3>
+        <div class="figure-box">
+          <div class="figure-row">
+            <span class="figure-label">相近历史人物</span>
+            <span class="figure-name" id="result-figure"></span>
+          </div>
+          <div class="figure-row figure-row--deed">
+            <span class="figure-label">历史事迹</span>
+            <span class="figure-deed" id="result-figure-deed"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">前三名匹配</h3>
+        <ol class="top3" id="top3"></ol>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-primary" id="btn-retest" type="button">重新测试</button>
+      </div>
+
+      <p class="final-note">测试结果仅用于自我反思。</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>六维：现实性 · 实践性 · 社会性 · 历史性 · 批判性 · 解放性</p>
+      <p class="copyright">马原人格测试网 · 马原课程作业展示 · 测试结果仅用于参考</p>
+    </div>
+  </footer>
+
+  <noscript>
+    <p style="text-align:center;padding:20px;">本页面需要开启 JavaScript 才能答题，请在浏览器设置中允许 JavaScript</p>
+  </noscript>
+
+  <script src="assets/js/test-data.js"></script>
+  <script src="assets/js/test.js"></script>
+</body>
+</html>

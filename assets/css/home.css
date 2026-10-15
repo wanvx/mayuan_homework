@@ -1,0 +1,207 @@
+/* ============================================================
+ * 马原 · 作品站 —— 主页面样式（纯导航）
+ * 配色：黑白灰（极简）
+ * 布局：「博客」居中主视觉，其余子页面按 01/02/03 向下排列
+ * ============================================================ */
+
+:root {
+  --black: #111111;
+  --ink: #1a1a1a;
+  --ink-soft: #555555;
+  --muted: #8a8a8a;
+  --bg: #fafafa;
+  --card: #ffffff;
+  --line: #e5e5e5;
+  --line-dark: #c9c9c9;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: min(720px, 100% - 40px);
+  margin: 0 auto;
+}
+
+/* ---------- 顶栏 ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(250, 250, 250, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--black);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--black);
+  color: #fff;
+  font-size: 13px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  text-align: center;
+  padding: 64px 0 40px;
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 6px 16px;
+  border: 1px solid var(--line-dark);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 46px);
+  letter-spacing: 0.02em;
+  font-weight: 800;
+}
+
+/* ---------- 导航列表 ---------- */
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0 56px;
+}
+
+.nav-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 460px;
+  padding: 20px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-dark);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+}
+
+/* 「博客」居中主视觉 */
+.nav-card--featured {
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 44px 24px;
+  margin-bottom: 10px;
+}
+
+.nav-card--featured .nav-card-name {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.nav-card-num {
+  flex: none;
+  width: 34px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.nav-card-name {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.nav-card-arrow {
+  flex: none;
+  font-size: 20px;
+  color: var(--muted);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.nav-card--featured .nav-card-arrow {
+  margin-top: 6px;
+  font-size: 22px;
+}
+
+.nav-card:hover .nav-card-arrow {
+  color: var(--black);
+  transform: translateX(4px);
+}
+
+.nav-card--featured:hover .nav-card-arrow {
+  transform: translateX(0) translateY(2px);
+}
+
+/* ---------- 页脚 ---------- */
+
+.site-footer {
+  margin-top: auto;
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.site-footer p { margin: 0; }
+
+/* ---------- 响应式 ---------- */
+
+@media (max-width: 680px) {
+  .container { width: calc(100% - 32px); }
+
+  .hero { padding: 48px 0 32px; }
+
+  .nav-card--featured { padding: 36px 20px; }
+}

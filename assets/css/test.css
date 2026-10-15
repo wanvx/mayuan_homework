@@ -1,0 +1,749 @@
+/* ============================================================
+ * 马原人格测试网 · 样式
+ * 主题：共产主义的暖色（红 + 金黄 + 米白），简约美观
+ * ============================================================ */
+
+:root {
+  --red: #C0392B;
+  --red-dark: #A93226;
+  --red-deep: #8B2C24;
+  --red-soft: #FBE9E4;
+  --gold: #D9822B;
+  --gold-light: #F3C35F;
+  --cream: #FBF4E9;
+  --cream-soft: #F6EAD5;
+  --ink: #3B2E24;
+  --ink-soft: #6B5B4E;
+  --muted: #A0907F;
+  --card: #FFFDF9;
+  --line: #EFE3D0;
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(139, 44, 36, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: min(880px, 100% - 40px);
+  margin: 0 auto;
+}
+
+/* ---------- 顶栏 ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(192, 57, 43, 0.96);
+  box-shadow: 0 2px 12px rgba(139, 44, 36, 0.25);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.logo-star {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--gold-light);
+  color: var(--red-deep);
+  font-size: 14px;
+}
+
+.back-btn {
+  padding: 7px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.back-btn:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--red);
+}
+
+/* ---------- 视图切换 ---------- */
+
+.view { display: none; padding: 44px 0 60px; }
+
+.view.active {
+  display: block;
+  animation: fadeUp 0.38s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 通用按钮 ---------- */
+
+.btn {
+  display: inline-block;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  padding: 11px 30px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(192, 57, 43, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--red-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.btn-outline:hover { background: var(--red-soft); }
+
+.btn-ghost {
+  background: none;
+  border: 1.5px dashed var(--line);
+  color: var(--ink-soft);
+  padding: 8px 18px;
+  font-size: 14px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.btn-lg {
+  padding: 15px 46px;
+  font-size: 17px;
+}
+
+/* ---------- 测试首页 ---------- */
+
+.hero {
+  text-align: center;
+  padding: 26px 0 12px;
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.hero h1 {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 6vw, 44px);
+  letter-spacing: 0.02em;
+  color: var(--red-deep);
+}
+
+.hero-sub {
+  margin: 0 0 30px;
+  font-size: clamp(16px, 3vw, 19px);
+  color: var(--ink-soft);
+}
+
+.disclaimer {
+  max-width: 540px;
+  margin: 26px auto 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.section-title {
+  margin: 44px 0 18px;
+  font-size: 20px;
+  color: var(--red-deep);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::before {
+  content: "";
+  width: 5px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--red);
+}
+
+.dim-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.dim-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.dim-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dim-letter {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--gold));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dim-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dim-desc {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 40px 0 10px;
+}
+
+.step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+
+.step p {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+}
+
+.step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ---------- 答题页 ---------- */
+
+.quiz-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.quiz-hint {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.progress-track {
+  height: 8px;
+  background: #EFE3D0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 5%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transition: width 0.35s ease;
+}
+
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  padding: 30px;
+}
+
+.question-text {
+  margin: 0 0 22px;
+  font-size: clamp(18px, 3.6vw, 22px);
+  color: var(--ink);
+}
+
+.options {
+  display: grid;
+  gap: 12px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: #FFFDF9;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--red);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(192, 57, 43, 0.12);
+  transform: translateX(3px);
+}
+
+.option:disabled { cursor: default; }
+
+.option .key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--cream-soft);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.18s, color 0.18s;
+}
+
+.option.selected {
+  border-color: var(--red);
+  background: var(--red-soft);
+}
+
+.option.selected .key {
+  background: var(--red);
+  color: #fff;
+}
+
+.quiz-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* ---------- 结果页 ---------- */
+
+.result-head {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.result-kicker {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.result-head h2 {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 6vw, 40px);
+  color: var(--red-deep);
+}
+
+.result-match {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.card-title::before {
+  content: "";
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+/* 雷达图 */
+.radar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.radar {
+  width: 100%;
+  max-width: 380px;
+}
+
+.radar svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.radar-ring {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.radar-axis {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.radar-area {
+  fill: rgba(192, 57, 43, 0.22);
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.radar-dot {
+  fill: var(--red);
+}
+
+.radar-label {
+  fill: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.radar-value {
+  fill: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.radar-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+}
+
+.radar-legend li {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.radar-legend .dim-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--gold));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 人格解读 */
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tag {
+  background: var(--red-soft);
+  color: var(--red-dark);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.label-line {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.label-line > span:first-child {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.label-line .value {
+  color: var(--ink);
+}
+
+.label-line .advice {
+  font-weight: 500;
+}
+
+.fallback-note {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  background: #FBF0DC;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+/* 历史人物匹配 */
+.figure-box {
+  background: var(--red-soft);
+  border: 1px solid #F3D8CD;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.figure-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.figure-row--deed {
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.figure-label {
+  flex: none;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.figure-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--red-dark);
+}
+
+.figure-deed {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+/* 前三名匹配 */
+.top3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: rank;
+}
+
+.top3 li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 4px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.top3 li:last-child { border-bottom: 0; }
+
+.top3 li::before {
+  counter-increment: rank;
+  content: counter(rank);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cream-soft);
+  color: var(--red);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.top3 li:first-child::before {
+  background: var(--red);
+  color: #fff;
+}
+
+.top3 .t-name {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.top3 .t-core {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.top3 .t-match {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.final-note {
+  margin: 24px auto 0;
+  max-width: 480px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+/* ---------- 页脚 ---------- */
+
+.site-footer {
+  margin-top: auto;
+  padding: 30px 0 24px;
+  background: var(--red-deep);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13.5px;
+  text-align: center;
+}
+
+.site-footer p { margin: 0 0 4px; }
+
+.site-footer .copyright {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12.5px;
+}
+
+/* ---------- 响应式 ---------- */
+
+@media (max-width: 680px) {
+  .container { width: calc(100% - 32px); }
+
+  .header-inner { flex-wrap: wrap; gap: 10px; }
+
+  .dim-grid { grid-template-columns: 1fr; }
+
+  .steps { grid-template-columns: 1fr; }
+
+  .question-card { padding: 20px; }
+
+  .quiz-foot .quiz-hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
