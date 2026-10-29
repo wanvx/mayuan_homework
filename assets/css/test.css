@@ -135,14 +135,6 @@ body {
   transform: translateY(-2px);
 }
 
-.btn-outline {
-  background: transparent;
-  border-color: var(--red);
-  color: var(--red);
-}
-
-.btn-outline:hover { background: var(--red-soft); }
-
 .btn-ghost {
   background: none;
   border: 1.5px dashed var(--line);
@@ -513,12 +505,6 @@ body {
   fill: var(--ink);
   font-size: 13px;
   font-weight: 600;
-}
-
-.radar-value {
-  fill: var(--gold);
-  font-size: 11px;
-  font-weight: 700;
 }
 
 .radar-legend {

@@ -127,18 +127,6 @@ function showView(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function quizHasProgress() {
-  const answered = appState.answers.filter(function (a) { return a !== -1; }).length;
-  return answered > 0 && answered < questions.length;
-}
-
-function goHome() {
-  if (el.views.quiz.classList.contains("active") && quizHasProgress()) {
-    if (!window.confirm("答题尚未完成，离开后需要重新开始，确定离开吗？")) return;
-  }
-  window.location.href = "index.html";
-}
-
 /* ---------- 首页：六维说明 ---------- */
 
 function renderDimGrid() {
