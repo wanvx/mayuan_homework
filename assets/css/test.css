@@ -455,6 +455,31 @@ body {
   color: var(--gold);
 }
 
+.result-rank {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* 「偏差几分」这个数单独摆着看不出好坏，配一个定性标签 */
+.fit-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  vertical-align: 2px;
+}
+
+.fit-close { background: var(--red); color: #fff; }
+
+.fit-near { background: var(--red-soft); color: var(--red); }
+
+.fit-loose { background: var(--cream-soft); color: var(--ink-soft); }
+
+.fit-far { background: var(--line); color: var(--muted); }
+
 .card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -693,6 +718,8 @@ body {
 }
 
 .top3 .t-match {
+  flex: none;
+  white-space: nowrap;
   font-size: 15px;
   font-weight: 700;
   color: var(--gold);
@@ -1021,6 +1048,13 @@ body {
   .question-card { padding: 20px; }
 
   .quiz-foot .quiz-hint { display: none; }
+
+  /* 前三名：空间不够时把核心维度折到下一行 */
+  .top3 li { flex-wrap: wrap; gap: 8px 10px; }
+
+  .top3 .t-name { flex: 1 1 auto; }
+
+  .top3 .t-core { flex: 1 1 100%; order: 3; font-size: 12px; }
 
   /* 六维分析 */
   .da-item { padding: 14px; }

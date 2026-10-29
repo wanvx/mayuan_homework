@@ -49,33 +49,23 @@ function computeScores(answers) {
   return U;
 }
 
-function euclidMatch(U, T, core) {
-  let sum = 0, dmax = 0;
+/* 偏差超过这个值，视为与所有类型都差得较远，触发按最高维度兜底。
+ * 19 分是实测定下来的：随机乱点约 14.4 分（九成落在 17.4 分以内），
+ * 认真作答约 6 分。取 19 只兜住最不像的那 2% 左右，不会误伤正常结果。 */
+const DEVIATION_CAP = 19;
+
+/* 加权均方差：core 维度权重 1.5，再除以权重和。
+ * 除以权重和这一步很关键——不除的话，core 有三个维度的模板
+ * 会天然得到更低的距离分母，被系统性地抬高分数。 */
+function deviation(U, T, core) {
+  let sum = 0, wsum = 0;
   dims.forEach(function (d, i) {
     const w = core.indexOf(d) >= 0 ? 1.5 : 1.0;
     const diff = U[d] - T[i];
     sum += w * diff * diff;
-    dmax += w * 100 * 100;
+    wsum += w;
   });
-  const d = Math.sqrt(sum);
-  const dMax = Math.sqrt(dmax);
-  return (1 - d / dMax) * 100;
-}
-
-function cosineMatch(U, T) {
-  let dot = 0, nu = 0, nt = 0;
-  dims.forEach(function (d, i) {
-    dot += U[d] * T[i];
-    nu += U[d] * U[d];
-    nt += T[i] * T[i];
-  });
-  const denom = Math.sqrt(nu) * Math.sqrt(nt);
-  if (denom === 0) return 0;
-  return Math.max(0, dot / denom) * 100;
-}
-
-function finalMatch(U, T, core) {
-  return 0.6 * euclidMatch(U, T, core) + 0.4 * cosineMatch(U, T);
+  return Math.sqrt(sum / wsum); // 0—100，可直接读作「平均偏差几分」
 }
 
 function findTemplate(name) {
@@ -95,24 +85,20 @@ function analyze(answers) {
   if (minS >= BAND.high) special = "全面发展者";
   else if (maxS <= BAND.low) special = "偶然个人";
 
-  // 常规候选
-  const top2 = order.slice(0, 2);
-  let candidates = templates.filter(function (t) {
-    return t.core.some(function (d) { return top2.indexOf(d) >= 0; });
-  });
-  if (candidates.length === 0) candidates = templates.slice();
-
-  const ranked = candidates
+  // 全部普通模板一起排序。偏差已按权重和归一，12 个模板之间可以直接比大小，
+  // 不需要再按「前两维」筛候选——筛候选会让结论取决于筛选规则，而不是你的选择。
+  const normal = templates.filter(function (t) { return t.core.length > 0; });
+  const ranked = normal
     .map(function (t) {
-      return { name: t.name, core: t.core, match: finalMatch(U, t.vec, t.core) };
+      return { name: t.name, core: t.core, dev: deviation(U, t.vec, t.core) };
     })
-    .sort(function (a, b) { return b.match - a.match; });
+    .sort(function (a, b) { return a.dev - b.dev; });
 
   // 前三名
   let top3;
   if (special) {
     const sp = findTemplate(special);
-    const spEntry = { name: special, core: sp.core, match: finalMatch(U, sp.vec, sp.core) };
+    const spEntry = { name: special, core: sp.core, dev: deviation(U, sp.vec, sp.core) };
     top3 = [spEntry].concat(ranked.filter(function (r) { return r.name !== special; })).slice(0, 3);
   } else {
     top3 = ranked.slice(0, 3);
@@ -122,7 +108,7 @@ function analyze(answers) {
   let finalTemplate, fallback = false, fallbackDim = null;
   if (special) {
     finalTemplate = findTemplate(special);
-  } else if (ranked[0].match < 60) {
+  } else if (ranked[0].dev > DEVIATION_CAP) {
     fallback = true;
     fallbackDim = order[0];
     finalTemplate = findTemplate(fallbackMap[order[0]]);
@@ -130,13 +116,19 @@ function analyze(answers) {
     finalTemplate = findTemplate(ranked[0].name);
   }
 
-  const finalMatchVal = finalMatch(U, finalTemplate.vec, finalTemplate.core);
+  const finalDev = deviation(U, finalTemplate.vec, finalTemplate.core);
+  const rank = (special || fallback)
+    ? null
+    : ranked.findIndex(function (r) { return r.name === finalTemplate.name; }) + 1;
 
   return {
     U: U,
     answers: answers.slice(),   // 拷贝一份：重测时 appState.answers 会被重置
     finalTemplate: finalTemplate,
-    finalMatch: finalMatchVal,
+    finalDev: finalDev,
+    special: special,
+    rank: rank,
+    normalCount: normal.length,
     fallback: fallback,
     fallbackDim: fallbackDim,
     top3: top3
@@ -295,7 +287,22 @@ function renderResult(result) {
   const t = result.finalTemplate;
 
   el.resultName.textContent = t.name;
-  el.resultMatch.textContent = "匹配度 " + result.finalMatch.toFixed(1) + "%";
+
+  // 光给一个分数，读者不知道几分算好，补一个定性标签
+  const fit = result.finalDev <= 8 ? ["fit-close", "贴合"]
+    : result.finalDev <= 13 ? ["fit-near", "大致贴合"]
+    : result.finalDev <= 18 ? ["fit-loose", "有点勉强"]
+    : ["fit-far", "不太贴合"];
+  el.resultMatch.innerHTML = "六维平均偏差 " + result.finalDev.toFixed(1) + " 分"
+    + '<span class="fit-tag ' + fit[0] + '">' + fit[1] + "</span>";
+
+  if (result.special) {
+    el.resultRank.textContent = "六维全落在同一侧，由特殊规则判定，不参与排序";
+  } else if (result.fallback) {
+    el.resultRank.textContent = "与任何一类都差得较远，按你的最高维度兜底";
+  } else {
+    el.resultRank.textContent = "在 " + result.normalCount + " 种类型里排第 " + result.rank;
+  }
 
   renderRadar(result.U);
   renderDimAnalysis(result.U);
@@ -318,7 +325,9 @@ function renderResult(result) {
 
   if (result.fallback) {
     el.resultFallbackNote.hidden = false;
-    el.resultFallbackNote.textContent = "综合匹配度不足 60%，已按你的最高维度「" + dimMeta[result.fallbackDim].name + "」判定为「" + t.name + "」。";
+    el.resultFallbackNote.textContent = "六个维度和哪一类都差得较远——最近的一类也差 "
+      + result.top3[0].dev.toFixed(1) + " 分。所以改用你的最高维度「"
+      + dimMeta[result.fallbackDim].name + "」来判定，得到「" + t.name + "」。";
   } else {
     el.resultFallbackNote.hidden = true;
   }
@@ -335,7 +344,7 @@ function renderResult(result) {
     core.textContent = "核心维度：" + (item.core.length ? item.core.map(function (d) { return dimMeta[d].name; }).join("·") : "无（特殊判定）");
     const match = document.createElement("span");
     match.className = "t-match";
-    match.textContent = item.match.toFixed(1) + "%";
+    match.textContent = "差 " + item.dev.toFixed(1) + " 分";
 
     li.appendChild(name);
     li.appendChild(core);
@@ -500,6 +509,7 @@ function initApp() {
     radarLegend: document.getElementById("radar-legend"),
     resultName: document.getElementById("result-name"),
     resultMatch: document.getElementById("result-match"),
+    resultRank: document.getElementById("result-rank"),
     resultTags: document.getElementById("result-tags"),
     resultKeywords: document.getElementById("result-keywords"),
     resultAdvice: document.getElementById("result-advice"),
@@ -514,7 +524,7 @@ function initApp() {
   };
 
   // 节点缺失会静默失败，先在控制台报出来
-  ["dim-analysis", "review-box", "review-list", "result-principle"].forEach(function (id) {
+  ["dim-analysis", "review-box", "review-list", "result-principle", "result-rank"].forEach(function (id) {
     if (!document.getElementById(id)) console.warn("[马原测试] 缺少节点: #" + id);
   });
 
