@@ -259,6 +259,27 @@ body {
   color: var(--ink-soft);
 }
 
+/* 首页维度卡：对应原理 */
+.dim-principle {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.dim-principle-label {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -677,6 +698,281 @@ body {
   color: var(--gold);
 }
 
+/* ---------- 六维分析 ---------- */
+
+.dim-analysis {
+  display: grid;
+  gap: 14px;
+}
+
+.da-item {
+  padding: 16px 18px;
+  background: #FFFDF9;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.da-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.da-name {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.da-band {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.da-band--high {
+  background: var(--red-soft);
+  color: var(--red-dark);
+}
+
+.da-band--mid {
+  background: #FBF0DC;
+  color: #8A5A1F;
+}
+
+.da-band--low {
+  background: var(--cream-soft);
+  color: var(--muted);
+}
+
+.da-score {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--red-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.da-score-unit {
+  margin-left: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.da-bar {
+  height: 6px;
+  margin: 10px 0 12px;
+  border-radius: 999px;
+  background: var(--cream-soft);
+  overflow: hidden;
+}
+
+.da-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+}
+
+.da-text {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.da-principle {
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.da-principle-label {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.da-quote {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  background: #FBF0DC;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.da-quote cite {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ---------- 答题回顾（折叠） ---------- */
+
+/* 必须写在 .card 之后，才能覆盖它的 padding: 26px */
+.review-box {
+  padding: 0;
+}
+
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.review-summary::-webkit-details-marker {
+  display: none;
+}
+
+.review-summary::marker {
+  content: "";
+}
+
+.review-summary .card-title {
+  margin: 0;
+}
+
+.review-summary:hover .card-title {
+  color: var(--red);
+}
+
+.review-hint {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.review-chevron {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-top: -4px;
+  border-right: 2px solid var(--red);
+  border-bottom: 2px solid var(--red);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease, margin 0.2s ease;
+}
+
+.review-box[open] .review-chevron {
+  margin-top: 4px;
+  transform: rotate(-135deg);
+}
+
+.review-box[open] .review-summary {
+  border-bottom: 1px dashed var(--line);
+}
+
+.review-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px 24px 20px;
+}
+
+.rv-item {
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.rv-item:last-child {
+  padding-bottom: 4px;
+  border-bottom: 0;
+}
+
+.rv-q {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.rv-no {
+  flex: none;
+  color: var(--muted);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rv-answer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--red-soft);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.rv-key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rv-stance {
+  margin: 0 0 6px;
+  padding-left: 12px;
+  border-left: 2px solid var(--gold-light);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.rv-stance-label {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.rv-principle {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.rv-unanswered .rv-answer {
+  background: var(--cream-soft);
+  color: var(--muted);
+}
+
+.rv-unanswered .rv-key {
+  background: var(--muted);
+}
+
 .result-actions {
   display: flex;
   flex-wrap: wrap;
@@ -725,6 +1021,22 @@ body {
   .question-card { padding: 20px; }
 
   .quiz-foot .quiz-hint { display: none; }
+
+  /* 六维分析 */
+  .da-item { padding: 14px; }
+
+  .da-head { gap: 8px; }
+
+  .da-score { font-size: 18px; }
+
+  /* 答题回顾 */
+  .review-summary { padding: 16px 18px; flex-wrap: wrap; }
+
+  .review-hint { display: none; }
+
+  .review-list { padding: 6px 18px 16px; }
+
+  .rv-answer { flex-wrap: wrap; }
 }
 
 @media (prefers-reduced-motion: reduce) {

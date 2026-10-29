@@ -18,16 +18,33 @@ let el = {};
 function computeScores(answers) {
   const U = {};
   dims.forEach(function (d) { U[d] = 0; });
+
+  // 只统计真正作答的题：-1、undefined、越界索引都算未作答
+  let answered = 0;
   answers.forEach(function (optIndex, qIndex) {
-    if (optIndex < 0) return;
     const question = questions[qIndex];
     if (!question) return;
-    const scores = question.options[optIndex].scores; // [R,P,S,H,C,L]
-    dims.forEach(function (d, i) { U[d] += scores[i]; });
+    if (typeof optIndex !== "number" || optIndex < 0) return;
+    const option = question.options[optIndex];
+    if (!option || !option.scores) return;
+    answered += 1;
+    dims.forEach(function (d, i) { U[d] += option.scores[i]; });
   });
-  // 归一化：score = (raw + 40) / 80 * 100
+
+  // 每题每维贡献 [-2, +2]，故单维理论区间是 [-2n, +2n]
+  const span = 2 * answered;
+
+  // 一道都没答：六维一律给中位，避免除零
+  if (span === 0) {
+    dims.forEach(function (d) { U[d] = 50; });
+    return U;
+  }
+
   dims.forEach(function (d) {
-    U[d] = Math.round((U[d] + 40) / 80 * 100);
+    // (raw + span) / (2 * span) * 100，把 [-span, +span] 映射到 [0, 100]
+    // 20 题全答时 span = 40，等价于旧版写死的 (raw + 40) / 80 * 100
+    const norm = (U[d] + span) / (2 * span) * 100;
+    U[d] = Math.max(0, Math.min(100, Math.round(norm)));
   });
   return U;
 }
@@ -73,10 +90,10 @@ function analyze(answers) {
 
   const order = dims.slice().sort(function (a, b) { return U[b] - U[a]; });
 
-  // 特殊判定
+  // 特殊判定（阈值来自 test-data.js 的 BAND，与结果页的分档共用）
   let special = null;
-  if (minS >= 65) special = "全面发展者";
-  else if (maxS <= 45) special = "偶然个人";
+  if (minS >= BAND.high) special = "全面发展者";
+  else if (maxS <= BAND.low) special = "偶然个人";
 
   // 常规候选
   const top2 = order.slice(0, 2);
@@ -115,7 +132,15 @@ function analyze(answers) {
 
   const finalMatchVal = finalMatch(U, finalTemplate.vec, finalTemplate.core);
 
-  return { U: U, finalTemplate: finalTemplate, finalMatch: finalMatchVal, fallback: fallback, fallbackDim: fallbackDim, top3: top3 };
+  return {
+    U: U,
+    answers: answers.slice(),   // 拷贝一份：重测时 appState.answers 会被重置
+    finalTemplate: finalTemplate,
+    finalMatch: finalMatchVal,
+    fallback: fallback,
+    fallbackDim: fallbackDim,
+    top3: top3
+  };
 }
 
 /* ---------- 视图切换 ---------- */
@@ -151,8 +176,14 @@ function renderDimGrid() {
     desc.className = "dim-desc";
     desc.textContent = meta.desc;
 
+    const principle = document.createElement("p");
+    principle.className = "dim-principle";
+    principle.innerHTML = '<span class="dim-principle-label">对应原理</span>'
+      + esc(principleName(meta.principle));
+
     card.appendChild(head);
     card.appendChild(desc);
+    card.appendChild(principle);
     el.dimGrid.appendChild(card);
   });
 }
@@ -228,6 +259,36 @@ function goPrev() {
   renderQuestion();
 }
 
+/* ---------- 文案工具 ---------- */
+
+function esc(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function principleName(key) {
+  const p = principles[key];
+  return p ? p.name : "";
+}
+
+function principleList(keys) {
+  return (keys || []).map(principleName).filter(Boolean).join(" · ");
+}
+
+function bandOf(score) {
+  if (score >= BAND.high) return "high";
+  if (score <= BAND.low) return "low";
+  return "mid";
+}
+
+function bandLabel(band) {
+  if (band === "high") return "高分档";
+  if (band === "low") return "待发展档";
+  return "中等档";
+}
+
 /* ---------- 结果页 ---------- */
 
 function renderResult(result) {
@@ -237,6 +298,7 @@ function renderResult(result) {
   el.resultMatch.textContent = "匹配度 " + result.finalMatch.toFixed(1) + "%";
 
   renderRadar(result.U);
+  renderDimAnalysis(result.U);
 
   // 标签
   el.resultTags.innerHTML = "";
@@ -248,6 +310,7 @@ function renderResult(result) {
   });
 
   el.resultKeywords.textContent = t.keywords;
+  el.resultPrinciple.textContent = principleList(t.principle) || "—";
   el.resultAdvice.textContent = t.advice;
 
   el.resultFigure.textContent = t.figure;
@@ -279,6 +342,71 @@ function renderResult(result) {
     li.appendChild(match);
     el.top3.appendChild(li);
   });
+
+  // 答题回顾（每次出结果都回到收起状态）
+  renderReview(result.answers);
+}
+
+/* ---------- 六维分析 ---------- */
+
+function renderDimAnalysis(U) {
+  el.dimAnalysis.innerHTML = dims.map(function (d) {
+    const meta = dimMeta[d];
+    const score = U[d];
+    const band = bandOf(score);
+    const p = principles[meta.principle];
+
+    let html = '<article class="da-item">'
+      + '<div class="da-head">'
+      + '<span class="dim-letter">' + d + '</span>'
+      + '<span class="da-name">' + esc(meta.name) + '</span>'
+      + '<span class="da-band da-band--' + band + '">' + bandLabel(band) + '</span>'
+      + '<span class="da-score">' + score + '<span class="da-score-unit">分</span></span>'
+      + '</div>'
+      + '<div class="da-bar"><span class="da-bar-fill" style="width:' + score + '%"></span></div>'
+      + '<p class="da-text">' + esc(meta.bands[band]) + '</p>';
+
+    if (p) {
+      html += '<p class="da-principle">'
+        + '<span class="da-principle-label">对应原理</span>' + esc(p.name)
+        + '</p>';
+      if (p.quote) {
+        html += '<blockquote class="da-quote">「' + esc(p.quote) + '」'
+          + '<cite>——' + esc(p.author) + '《' + esc(p.work) + '》</cite>'
+          + '</blockquote>';
+      }
+    }
+
+    return html + '</article>';
+  }).join("");
+}
+
+/* ---------- 答题回顾 ---------- */
+
+function renderReview(answers) {
+  el.reviewList.innerHTML = questions.map(function (q, i) {
+    const idx = answers[i];
+    const picked = (typeof idx === "number" && idx >= 0 && q.options[idx]) ? q.options[idx] : null;
+
+    let html = '<li class="rv-item' + (picked ? '' : ' rv-unanswered') + '">'
+      + '<p class="rv-q"><span class="rv-no">' + (i < 9 ? "0" : "") + (i + 1) + '</span>'
+      + esc(q.text) + '</p>';
+
+    if (picked) {
+      html += '<p class="rv-answer"><span class="rv-key">' + "ABCD"[idx] + '</span>'
+        + '<span>' + esc(picked.text) + '</span></p>'
+        + '<p class="rv-stance"><span class="rv-stance-label">立场解析</span>'
+        + esc(picked.stance) + '</p>';
+    } else {
+      html += '<p class="rv-answer"><span class="rv-key">—</span>'
+        + '<span>本题未作答，不计入六维得分</span></p>';
+    }
+
+    html += '<p class="rv-principle">考查原理　' + esc(principleName(q.principle)) + '</p>';
+    return html + '</li>';
+  }).join("");
+
+  el.reviewBox.open = false;
 }
 
 /* ---------- 雷达图 ---------- */
@@ -378,8 +506,17 @@ function initApp() {
     resultFallbackNote: document.getElementById("result-fallback-note"),
     resultFigure: document.getElementById("result-figure"),
     resultFigureDeed: document.getElementById("result-figure-deed"),
+    resultPrinciple: document.getElementById("result-principle"),
+    dimAnalysis: document.getElementById("dim-analysis"),
+    reviewBox: document.getElementById("review-box"),
+    reviewList: document.getElementById("review-list"),
     top3: document.getElementById("top3")
   };
+
+  // 节点缺失会静默失败，先在控制台报出来
+  ["dim-analysis", "review-box", "review-list", "result-principle"].forEach(function (id) {
+    if (!document.getElementById(id)) console.warn("[马原测试] 缺少节点: #" + id);
+  });
 
   appState.answers = new Array(questions.length).fill(-1);
 
