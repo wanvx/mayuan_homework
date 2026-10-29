@@ -17,42 +17,49 @@ let el = {};
 
 function computeScores(answers) {
   const U = {};
-  dims.forEach(function (d) { U[d] = 0; });
+  const lo = {};   // 该维在已答题目上的理论最低分
+  const hi = {};   // 该维在已答题目上的理论最高分
+  dims.forEach(function (d) { U[d] = 0; lo[d] = 0; hi[d] = 0; });
 
   // 只统计真正作答的题：-1、undefined、越界索引都算未作答
-  let answered = 0;
   answers.forEach(function (optIndex, qIndex) {
     const question = questions[qIndex];
     if (!question) return;
     if (typeof optIndex !== "number" || optIndex < 0) return;
     const option = question.options[optIndex];
     if (!option || !option.scores) return;
-    answered += 1;
-    dims.forEach(function (d, i) { U[d] += option.scores[i]; });
+
+    dims.forEach(function (d, i) {
+      U[d] += option.scores[i];
+      // 边界取「这道题四个选项在该维上的最小 / 最大值」。
+      // 每维只由真正考它的题撑开，这样归一化之后六维都能用满 0—100，
+      // 不会被大量恒为 0 的题目把分数压到中间。
+      const col = question.options.map(function (o) { return o.scores[i]; });
+      lo[d] += Math.min.apply(null, col);
+      hi[d] += Math.max.apply(null, col);
+    });
   });
 
-  // 每题每维贡献 [-2, +2]，故单维理论区间是 [-2n, +2n]
-  const span = 2 * answered;
-
   // 一道都没答：六维一律给中位，避免除零
-  if (span === 0) {
+  const anyAnswer = dims.some(function (d) { return hi[d] !== lo[d]; });
+  if (!anyAnswer) {
     dims.forEach(function (d) { U[d] = 50; });
     return U;
   }
 
   dims.forEach(function (d) {
-    // (raw + span) / (2 * span) * 100，把 [-span, +span] 映射到 [0, 100]
-    // 20 题全答时 span = 40，等价于旧版写死的 (raw + 40) / 80 * 100
-    const norm = (U[d] + span) / (2 * span) * 100;
+    const span = hi[d] - lo[d];
+    if (span <= 0) { U[d] = 50; return; }
+    const norm = (U[d] - lo[d]) / span * 100;
     U[d] = Math.max(0, Math.min(100, Math.round(norm)));
   });
   return U;
 }
 
 /* 偏差超过这个值，视为与所有类型都差得较远，触发按最高维度兜底。
- * 19 分是实测定下来的：随机乱点约 14.4 分（九成落在 17.4 分以内），
- * 认真作答约 6 分。取 19 只兜住最不像的那 2% 左右，不会误伤正常结果。 */
-const DEVIATION_CAP = 19;
+ * 27 分是 v2 实测定的：随机作答的偏差中位数约 20.8，P90 约 25.4，
+ * 取 27 只兜住最不像的 5% 左右，不会误伤正常结果。 */
+const DEVIATION_CAP = 27;
 
 /* 加权均方差：core 维度权重 1.5，再除以权重和。
  * 除以权重和这一步很关键——不除的话，core 有三个维度的模板
@@ -85,9 +92,10 @@ function analyze(answers) {
   if (minS >= BAND.high) special = "全面发展者";
   else if (maxS <= BAND.low) special = "偶然个人";
 
-  // 全部普通模板一起排序。偏差已按权重和归一，12 个模板之间可以直接比大小，
-  // 不需要再按「前两维」筛候选——筛候选会让结论取决于筛选规则，而不是你的选择。
-  const normal = templates.filter(function (t) { return t.core.length > 0; });
+  // 14 个模板全部参与排序。v2 的六维彼此独立，一个人很难六维全高或全低，
+  // 所以「全面发展者」「偶然个人」不再只靠特殊判定，也参与正常比较——
+  // 否则这两个模板永远抽不到。
+  const normal = templates.slice();
   const ranked = normal
     .map(function (t) {
       return { name: t.name, core: t.core, dev: deviation(U, t.vec, t.core) };
