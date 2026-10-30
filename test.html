@@ -151,6 +151,16 @@
     <p style="text-align:center;padding:20px;">这个页面要开 JavaScript 才能答题，请在浏览器设置里允许一下。</p>
   </noscript>
 
+  <!-- 背景音乐：默认不播放，右下角按钮开关。preload="none" 表示不进页面就下载 -->
+  <audio id="bgm" src="assets/audio/internationale-piano.mp3" loop preload="none"></audio>
+  <button class="bgm-btn" id="bgm-toggle" type="button" aria-pressed="false"
+          aria-label="打开背景音乐" title="背景音乐">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path class="bgm-note" d="M9.5 17.2V7.6l8-1.7v9.5a2.6 2.6 0 1 1-1.6-2.4V8.7l-4.8 1v9.4a2.6 2.6 0 1 1-1.6-2.4z"/>
+      <line class="bgm-slash" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/>
+    </svg>
+  </button>
+
   <script src="assets/js/test-data.js"></script>
   <script src="assets/js/test.js"></script>
 </body>

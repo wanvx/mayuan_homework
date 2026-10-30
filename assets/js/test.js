@@ -547,10 +547,94 @@ function initApp() {
   showView("home");
 }
 
+/* ---------- 背景音乐 ---------- */
+
+// 音量压得比较低，当前景里的底噪，不抢读题
+const BGM_VOLUME = 0.3;
+
+function initBgm() {
+  const audio = document.getElementById("bgm");
+  const btn = document.getElementById("bgm-toggle");
+  if (!audio || !btn) return;
+
+  let fadeTimer = null;
+
+  function syncPressed(on) {
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.setAttribute("aria-label", on ? "关闭背景音乐" : "打开背景音乐");
+    btn.setAttribute("title", on ? "关闭背景音乐" : "打开背景音乐");
+  }
+
+  // 用定时器做音量渐变：直接 play/pause 会有一声爆音
+  function fadeTo(target, ms, done) {
+    if (fadeTimer) {
+      clearInterval(fadeTimer);
+      fadeTimer = null;
+    }
+    const from = audio.volume;
+    const steps = Math.max(1, Math.round(ms / 40));
+    let i = 0;
+    fadeTimer = setInterval(function () {
+      i += 1;
+      audio.volume = Math.max(0, Math.min(1, from + (target - from) * (i / steps)));
+      if (i >= steps) {
+        clearInterval(fadeTimer);
+        fadeTimer = null;
+        if (done) done();
+      }
+    }, 40);
+  }
+
+  function start() {
+    audio.volume = 0;
+    btn.classList.add("is-loading");
+    const played = audio.play();
+    const begin = function () {
+      btn.classList.remove("is-loading");
+      syncPressed(true);
+      fadeTo(BGM_VOLUME, 900);
+    };
+    if (played && typeof played.then === "function") {
+      // 浏览器拒绝播放（比如省电模式）时不做任何假设，退回关闭态
+      played.then(begin).catch(function () {
+        btn.classList.remove("is-loading");
+        syncPressed(false);
+      });
+    } else {
+      begin();
+    }
+  }
+
+  function stop() {
+    syncPressed(false);
+    fadeTo(0, 400, function () {
+      audio.pause();
+    });
+  }
+
+  btn.addEventListener("click", function () {
+    if (btn.getAttribute("aria-pressed") === "true") stop();
+    else start();
+  });
+
+  // 音频文件缺失或解码失败：按钮置灰，不留一个按了没反应的键
+  audio.addEventListener("error", function () {
+    btn.classList.add("is-loading");
+    btn.setAttribute("title", "音频加载失败");
+    btn.setAttribute("aria-label", "音频加载失败");
+  });
+
+  syncPressed(false);
+}
+
 if (typeof window !== "undefined" && typeof document !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initApp);
-  } else {
+  const boot = function () {
     initApp();
+    initBgm();
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
   }
 }
