@@ -3,51 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>小东西合集</title>
-  <meta name="description" content="导航页面">
-  <meta name="theme-color" content="#111111">
+  <title>马原人格测试</title>
+  <meta name="description" content="马原课程作业 · 人格测试">
+  <meta name="theme-color" content="#C0392B">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="assets/css/home.css">
+  <!-- 打开根网址直接进测试页：JS 优先（不留下历史记录），meta 兜底，纯文本链接保底 -->
+  <script>location.replace("test.html");</script>
+  <meta http-equiv="refresh" content="0; url=test.html">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
+      color: #444;
+      background: #faf7f2;
+    }
+    a { color: #C0392B; }
+  </style>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <span class="logo-mark">★</span>导航站
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-
-    <section class="hero">
-      <p class="hero-kicker">点哪去哪！</p>
-      <h1>导航页</h1>
-    </section>
-
-    <nav class="nav-list" aria-label="子页面导航">
-
-      <a class="nav-card nav-card--featured" href="blog.html">
-        <span class="nav-card-name">博客</span>
-        <span class="nav-card-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a class="nav-card" href="test.html">
-        <span class="nav-card-num">1</span>
-        <span class="nav-card-name">马原人格测试网</span>
-        <span class="nav-card-arrow" aria-hidden="true">→</span>
-      </a>
-
-    </nav>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>© 2026 马原 · 作品站 · 课程作业展示</p>
-    </div>
-  </footer>
-
+  <p>正在进入马原人格测试…<a href="test.html">如果没有自动跳转，点这里</a></p>
 </body>
 </html>
