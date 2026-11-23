@@ -264,6 +264,24 @@ body {
   font-weight: 600;
 }
 
+/* 教材章次徽标（首页维度卡 / 结果页六维分析 / 答题回顾共用） */
+.dim-chapter,
+.da-chapter,
+.rv-chapter {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 0 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--cream-soft);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -967,6 +985,15 @@ body {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--gold);
+}
+
+.rv-explain {
+  margin: 0 0 6px;
+  padding-left: 12px;
+  border-left: 2px solid var(--cream-soft);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-soft);
 }
 
 .rv-principle {

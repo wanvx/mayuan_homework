@@ -179,7 +179,10 @@ function renderDimGrid() {
     const principle = document.createElement("p");
     principle.className = "dim-principle";
     principle.innerHTML = '<span class="dim-principle-label">对应原理</span>'
-      + esc(principleName(meta.principle));
+      + esc(principleName(meta.principle))
+      + (principleChapter(meta.principle)
+        ? ' <span class="dim-chapter">' + esc(principleChapter(meta.principle)) + '</span>'
+        : "");
 
     card.appendChild(head);
     card.appendChild(desc);
@@ -271,6 +274,11 @@ function esc(str) {
 function principleName(key) {
   const p = principles[key];
   return p ? p.name : "";
+}
+
+function principleChapter(key) {
+  const p = principles[key];
+  return p && p.chapter ? "教材" + p.chapter : "";
 }
 
 function principleList(keys) {
@@ -386,6 +394,7 @@ function renderDimAnalysis(U) {
     if (p) {
       html += '<p class="da-principle">'
         + '<span class="da-principle-label">对应原理</span>' + esc(p.name)
+        + (p.chapter ? ' <span class="da-chapter">教材' + esc(p.chapter) + '</span>' : "")
         + '</p>';
       if (p.quote) {
         html += '<blockquote class="da-quote">「' + esc(p.quote) + '」'
@@ -419,7 +428,17 @@ function renderReview(answers) {
         + '<span>本题未作答，不计入六维得分</span></p>';
     }
 
-    html += '<p class="rv-principle">考查原理　' + esc(principleName(q.principle)) + '</p>';
+    const note = typeof questionNotes === "object" ? questionNotes[q.id] : null;
+    if (note) {
+      html += '<p class="rv-explain"><span class="rv-stance-label">题目解释</span>'
+        + esc(note) + '</p>';
+    }
+
+    html += '<p class="rv-principle">考查原理　' + esc(principleName(q.principle))
+      + (principleChapter(q.principle)
+        ? '<span class="rv-chapter">' + esc(principleChapter(q.principle)) + '</span>'
+        : "")
+      + '</p>';
     return html + '</li>';
   }).join("");
 
